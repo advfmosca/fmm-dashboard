@@ -1,4 +1,13 @@
 {
-  "last_updated": null,
-  "checks": []
+  "last_updated": "2026-05-17T11:23:13+00:00",
+  "checks": [
+    {
+      "date": "2026-05-16",
+      "alerts_total": 28,
+      "zero": 7,
+      "spike": 21,
+      "accounts_checked": 62,
+      "total_spend_yest": 2177.6
+    }
+  ]
 }
