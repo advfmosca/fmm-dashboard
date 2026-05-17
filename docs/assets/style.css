@@ -377,6 +377,31 @@ main {
   display: block;
 }
 .modal-body h3 { margin: 16px 0 8px 0; font-size: 14px; color: var(--fg-dim); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+.modal-body .open-ad-btn {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 14px;
+  padding: 9px 14px;
+  background: var(--accent);
+  color: #000;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.modal-body .open-ad-btn:hover { background: #ffa07a; text-decoration: none; }
+.modal-body .rational {
+  margin: 10px 0 0 0;
+  padding: 12px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--fg-soft);
+  font-size: 13px;
+  line-height: 1.55;
+}
+.modal-body .rational strong { color: var(--fg); font-weight: 600; }
 
 /* ────────────────────────── Footer ────────────────────────── */
 .footer {

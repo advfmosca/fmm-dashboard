@@ -37,6 +37,88 @@ function daysAgo(iso) {
   return Math.floor((today - then) / 86400000);
 }
 
+// Costruisce l'URL deep-link alla piattaforma pubblicitaria nativa.
+function adAccountUrl(platform, accountId) {
+  if (!accountId) return null;
+  const p = (platform || "").toLowerCase();
+  if (p === "meta" || p === "facebook") {
+    return `https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=${accountId}`;
+  }
+  if (p === "google" || p === "google_ads") {
+    const clean = String(accountId).replace(/-/g, "");
+    return `https://ads.google.com/aw/overview?__c=${clean}`;
+  }
+  if (p === "tiktok") {
+    return `https://ads.tiktok.com/i18n/perf/campaign?aadvid=${accountId}`;
+  }
+  return null;
+}
+
+function platformLabel(p) {
+  const k = (p || "").toLowerCase();
+  if (k === "meta" || k === "facebook") return "Meta Ads Manager";
+  if (k === "google" || k === "google_ads") return "Google Ads";
+  if (k === "tiktok") return "TikTok Ads Manager";
+  return "piattaforma";
+}
+
+// Genera un rational testuale italiano analizzando i punti del trend.
+function analyzeTrend(points) {
+  if (!points || points.length < 3) return null;
+  const spends = points.map(p => p.spend || 0);
+  const dates = points.map(p => p.date);
+  const n = spends.length;
+  const total = spends.reduce((a, b) => a + b, 0);
+  const avg = total / n;
+  const min = Math.min(...spends);
+  const max = Math.max(...spends);
+  const maxIdx = spends.indexOf(max);
+  const minIdx = spends.indexOf(min);
+  const zeros = spends.filter(s => s === 0).length;
+  const nonZero = spends.filter(s => s > 0);
+  const avgNonZero = nonZero.length ? nonZero.reduce((a,b)=>a+b,0) / nonZero.length : 0;
+
+  // Confronto prima metà vs seconda metà
+  const half = Math.floor(n / 2);
+  const first = spends.slice(0, half);
+  const second = spends.slice(n - half);
+  const avgFirst = first.reduce((a,b)=>a+b,0) / first.length;
+  const avgSecond = second.reduce((a,b)=>a+b,0) / second.length;
+  const trend = avgFirst > 0 ? ((avgSecond / avgFirst - 1) * 100) : null;
+
+  // Variabilità (coefficient of variation)
+  const variance = spends.reduce((sum, s) => sum + (s - avg) ** 2, 0) / n;
+  const stdev = Math.sqrt(variance);
+  const cv = avg > 0 ? (stdev / avg) * 100 : 0;
+
+  // Componi rational
+  let lines = [];
+  lines.push(`<strong>Spesa totale</strong> ${fmtEUR(total)} su ${n} giorni · <strong>media</strong> ${fmtEUR(avg)}/giorno`);
+  if (zeros > 0) {
+    if (zeros === n) {
+      lines.push(`⚠️ <strong>0 spesa</strong> in tutta la finestra — account fermo o non erogante.`);
+    } else {
+      lines.push(`${zeros} giorn${zeros>1?'i':'o'} a 0 € (media nei giorni eroganti: ${fmtEUR(avgNonZero)})`);
+    }
+  }
+  if (max > 0) {
+    lines.push(`picco a <strong>${fmtEUR(max)}</strong> il ${dates[maxIdx]}`);
+  }
+  if (trend !== null && Math.abs(trend) >= 10) {
+    const arrow = trend > 0 ? "📈" : "📉";
+    const dir = trend > 0 ? "in crescita" : "in calo";
+    lines.push(`${arrow} <strong>${dir}</strong>: ${trend > 0 ? "+" : ""}${trend.toFixed(0)}% nella seconda metà vs prima`);
+  } else if (trend !== null && avg > 0) {
+    lines.push(`andamento <strong>stabile</strong> tra le due metà del periodo (Δ ${trend > 0 ? "+" : ""}${trend.toFixed(0)}%)`);
+  }
+  if (cv > 60 && avg > 0) {
+    lines.push(`alta variabilità giornaliera (CV ${cv.toFixed(0)}%) — delivery irregolare`);
+  } else if (cv < 25 && avg > 0 && zeros === 0) {
+    lines.push(`delivery <strong>regolare</strong> (CV ${cv.toFixed(0)}%)`);
+  }
+  return lines.join(" · ") + ".";
+}
+
 // ────────────────────────────────────────────────────────────────────────
 // URL / state helpers
 // ────────────────────────────────────────────────────────────────────────
@@ -409,15 +491,24 @@ function showModal(section, c) {
     if (c.notifications_count !== undefined) kv("Promemoria inviati", c.notifications_count);
   }
 
+  // Pulsante deep-link all'account pubblicitario
+  const adUrl = adAccountUrl(c.platform, c.account_id);
+  const openBtn = adUrl
+    ? `<a class="open-ad-btn" href="${adUrl}" target="_blank" rel="noopener">↗ Apri su ${platformLabel(c.platform)}</a>`
+    : "";
+
+  // Trend + rational
   let sparkBlock = "";
   if (c.trend && c.trend.length >= 2) {
+    const rational = analyzeTrend(c.trend);
     sparkBlock = `
       <h3>Trend ${c.trend.length} giorni</h3>
       ${sparklineSvg(c.trend, 540, 120, { cls: "sparkline-large" })}
+      ${rational ? `<p class="rational">${rational}</p>` : ""}
     `;
   }
 
-  body.innerHTML = `<div>${kvHtml}</div>${sparkBlock}`;
+  body.innerHTML = `<div>${kvHtml}</div>${openBtn}${sparkBlock}`;
   modal.hidden = false;
 }
 
