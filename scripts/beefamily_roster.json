@@ -1,0 +1,5 @@
+{
+  "_comment": "Placeholder. Da popolare in Fase 1 (Refactor BeeFamily) copiando da /Users/francescomariamosca/Desktop/Bee Family/Check Settimanale Campagne/_skill/roster.json. Includere meta_id + google_ads_id + slack_channel_id + nome cliente per ognuno dei 22 clienti BeeFamily (BEEFAMILY 2 incluso).",
+  "version": "TBD",
+  "clienti": []
+}

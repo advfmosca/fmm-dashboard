@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FMM Dashboard</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-logo">FMM</span>
+      <span class="brand-name">Dashboard</span>
+    </div>
+    <nav class="tabs" id="tabs">
+      <a href="#spending" data-section="spending" class="tab active">Spending</a>
+      <a href="#beefamily" data-section="beefamily" class="tab">Bee Family</a>
+      <a href="#aghc" data-section="aghc" class="tab">AGHC</a>
+    </nav>
+  </header>
+
+  <main id="content">
+    <section id="section-spending" class="section active">
+      <h2>Anomalie Spending</h2>
+      <div id="card-spending" class="card-list">
+        <p class="muted">Caricamento ultimi check…</p>
+      </div>
+    </section>
+
+    <section id="section-beefamily" class="section">
+      <h2>Bee Family Daily Check</h2>
+      <div id="card-beefamily" class="card-list">
+        <p class="muted">In attesa del primo snapshot. Sar&agrave; popolato dal task <code>daily-check-beefamily</code> dopo la Fase 1.</p>
+      </div>
+    </section>
+
+    <section id="section-aghc" class="section">
+      <h2>AGHC 3-Day Check</h2>
+      <div id="card-aghc" class="card-list">
+        <p class="muted">In attesa del primo snapshot. Sar&agrave; popolato dal task <code>three-day-check-aghc</code> dopo la Fase 2.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>Ultimo deploy: <span id="deploy-info">—</span></span>
+    <span>&middot;</span>
+    <a href="https://github.com/advfmosca/fmm-dashboard" target="_blank" rel="noopener">repo</a>
+  </footer>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>
