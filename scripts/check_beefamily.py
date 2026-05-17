@@ -452,14 +452,14 @@ def main():
             "text": tpl_riepilogo_anomalie(yesterday, fermi_nuovi_list),
         })
 
-    # ── Heartbeat 7.a SEMPRE ──
-    dashboard_url = f"{DASHBOARD_BASE}/?section=beefamily&date={yesterday}"
+    # ── Heartbeat 7.a RIMOSSO ──
+    # In v3+brief: l'heartbeat di chiusura su #bf-anomalie è stato eliminato perché ridondante.
+    # Il "tutto ok, ho girato" viene gestito dal task fmm-morning-brief (cron 0 8 * * *) che
+    # legge il manifest pubblicato e produce un brief consolidato cross-portfolio in DM Francesco.
+    # Se vuoi ripristinarlo: scommenta il blocco sotto e re-aggiungi tpl_heartbeat all'import.
+    # actions.append({"type": "heartbeat", "channel_id": anomalie_channel,
+    #                  "text": tpl_heartbeat(yesterday, counters, f"{DASHBOARD_BASE}/?section=beefamily&date={yesterday}")})
     counters["fermi_attivi_tot"] = len(new_state["accounts"])
-    actions.append({
-        "type": "heartbeat",
-        "channel_id": anomalie_channel,
-        "text": tpl_heartbeat(yesterday, counters, dashboard_url),
-    })
 
     # ── Trend 14gg: riusa prev_snap, appendi yest, fallback se nuovo ──
     prev_trend = (prev_snap or {}).get("trend_14d_by_id") or {}

@@ -458,14 +458,14 @@ def main():
             "text": tpl_riepilogo_anomalie(yesterday, fermi_nuovi_list),
         })
 
-    # ── 5.f DM Francesco SEMPRE ──
+    # ── 5.f DM Francesco RIMOSSA ──
+    # In v3+brief: la DM Francesco "ricevuto della cron run" è stata eliminata perché ridondante.
+    # Il riepilogo cross-portfolio (spending + bf + aghc) viene generato dal task fmm-morning-brief
+    # (cron 0 8 * * *) che legge il manifest pubblicato e posta un brief consolidato in DM Francesco.
+    # Se vuoi ripristinarla: scommenta il blocco sotto.
+    # actions.append({"type": "dm_francesco", "channel_id": dm_francesco_channel,
+    #                  "text": tpl_dm_francesco(yesterday, counters, f"{DASHBOARD_BASE}/?section=aghc&date={yesterday}")})
     counters["fermi_attivi_tot"] = len(new_state["accounts"])
-    dashboard_url = f"{DASHBOARD_BASE}/?section=aghc&date={yesterday}"
-    actions.append({
-        "type": "dm_francesco",
-        "channel_id": dm_francesco_channel,
-        "text": tpl_dm_francesco(yesterday, counters, dashboard_url),
-    })
 
     # ── Trend 14gg: riusa prev_snap, appendi yest ──
     prev_trend = (prev_snap or {}).get("trend_14d_by_id") or {}
