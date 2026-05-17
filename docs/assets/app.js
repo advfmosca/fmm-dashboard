@@ -69,10 +69,10 @@ async function loadOwnersMap() {
   if (STATE._accountOwner) return STATE._accountOwner;
   try {
     const [owners, bf, aghc, other] = await Promise.all([
-      fetchJson("../scripts/owners.json").catch(()=>null),
-      fetchJson("../scripts/beefamily_roster.json").catch(()=>null),
-      fetchJson("../scripts/aghc_roster.json").catch(()=>null),
-      fetchJson("../scripts/other_roster.json").catch(()=>null),
+      fetchJson("scripts/owners.json").catch(()=>null),
+      fetchJson("scripts/beefamily_roster.json").catch(()=>null),
+      fetchJson("scripts/aghc_roster.json").catch(()=>null),
+      fetchJson("scripts/other_roster.json").catch(()=>null),
     ]);
     STATE._owners = owners || {owners: {}, sub_clients: {}};
     const map = new Map();
@@ -715,7 +715,7 @@ async function loadSection(section, targetDate = null) {
     if (section === "other") {
       // Carica roster Altri se non già in cache
       if (!STATE._otherRoster) {
-        STATE._otherRoster = await fetchJson("../scripts/other_roster.json").catch(() => ({accounts: []}));
+        STATE._otherRoster = await fetchJson("scripts/other_roster.json").catch(() => ({accounts: []}));
       }
       const accs = (STATE._otherRoster.accounts || []);
       const status = document.getElementById("status-other");
