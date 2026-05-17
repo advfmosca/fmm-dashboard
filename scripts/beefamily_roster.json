@@ -1,5 +1,35 @@
 {
-  "_comment": "Placeholder. Da popolare in Fase 1 (Refactor BeeFamily) copiando da /Users/francescomariamosca/Desktop/Bee Family/Check Settimanale Campagne/_skill/roster.json. Includere meta_id + google_ads_id + slack_channel_id + nome cliente per ognuno dei 22 clienti BeeFamily (BEEFAMILY 2 incluso).",
-  "version": "TBD",
-  "clienti": []
+  "_comment": "Roster Bee Family consolidato — clienti + meta_id + google_id + slack channel_id. Fonte di verità unica per il task scheduled daily-check-beefamily v3. Aggiornare manualmente quando si aggiunge/rimuove un cliente. Allineato al 2026-05-17 con /Users/francescomariamosca/Desktop/Bee Family/Check Settimanale Campagne/_skill/{roster.json,slack_channels.json}.",
+  "version": "2026-05-17",
+  "workspace": "fmm-consulting",
+  "anomalie_channel_id": "C0B07LFCY81",
+  "anomalie_channel_name": "#bf-anomalie",
+  "policy": {
+    "reminder_interval_days": 3,
+    "history_lookback_days": 60
+  },
+  "clients": [
+    {"order": 1,  "name": "ALBATROS",      "meta_id": "630436088886762",  "google_id": "517-405-1660", "channel_id": "C0AV8NRRNH0"},
+    {"order": 2,  "name": "ARIANNA",       "meta_id": "908982640845603",  "google_id": "752-894-5060", "channel_id": "C0B0P1EHAQY"},
+    {"order": 3,  "name": "BONADIES",      "meta_id": null,               "google_id": "614-938-8109", "channel_id": "C0AV2BQ35MH"},
+    {"order": 4,  "name": "BRORA",         "meta_id": "508414914703199",  "google_id": null,           "channel_id": "C0AV5AUCPGD"},
+    {"order": 5,  "name": "CICCIO",        "meta_id": "421004342260012",  "google_id": null,           "channel_id": "C0AV8NTS39Q"},
+    {"order": 6,  "name": "CIRILLO",       "meta_id": "432856047384850",  "google_id": null,           "channel_id": "C0AV2BQM4SX"},
+    {"order": 7,  "name": "COLOR HOLIDAY", "meta_id": "1576344015714351", "google_id": "694-549-1568", "channel_id": "C0B0P1FAAHE", "google_not_connected": true, "note": "Google non connesso a Windsor — escluso dal fetch"},
+    {"order": 8,  "name": "CRISTALLO",     "meta_id": "733342015364558",  "google_id": "798-656-6211", "channel_id": "C0AV2BQPD27"},
+    {"order": 9,  "name": "DELTA BLU",     "meta_id": "236880885374018",  "google_id": "638-552-4256", "channel_id": "C0AVCAW2VTN"},
+    {"order": 10, "name": "EL CID",        "meta_id": "978507964180533",  "google_id": "343-383-9480", "channel_id": "C0AV6M29XFG"},
+    {"order": 11, "name": "HELIOS",        "meta_id": "1515205043021222", "google_id": "111-356-3903", "channel_id": "C0AV2BRKL0K"},
+    {"order": 12, "name": "H&V",           "meta_id": "343882111507930",  "google_id": "816-227-1235", "channel_id": "C0B0P1HHHRN"},
+    {"order": 13, "name": "HOY VILLAGE",   "meta_id": "1234016965549263", "google_id": "690-064-1891", "channel_id": "C0AV5AX47FX"},
+    {"order": 14, "name": "MAURITIUS",     "meta_id": "574208703469432",  "google_id": "678-286-7092", "channel_id": "C0AV8NW74BC"},
+    {"order": 15, "name": "MALASPINA",     "meta_id": "900620849401028",  "google_id": "486-060-7017", "channel_id": "C0AVCAXKZ1S"},
+    {"order": 16, "name": "OLIMPIC",       "meta_id": "2855621041150238", "google_id": "881-991-7013", "channel_id": "C0B0P1HAKU0"},
+    {"order": 17, "name": "RIVAMARE",      "meta_id": "1240912661421243", "google_id": "718-909-9456", "channel_id": "C0AV2BSPX6X"},
+    {"order": 18, "name": "SARDINIA",      "meta_id": "608324351982441",  "google_id": "705-314-5188", "channel_id": "C0B0P1J7XJL"},
+    {"order": 19, "name": "SOGNO",         "meta_id": "737254889441352",  "google_id": "344-188-9884", "channel_id": "C0AV5AYLB45"},
+    {"order": 20, "name": "TETI",          "meta_id": "408911445156468",  "google_id": "277-207-6095", "channel_id": "C0AUT9CTZP1"},
+    {"order": 21, "name": "TRIESTE",       "meta_id": "692054874845160",  "google_id": "397-800-2496", "channel_id": "C0AV2BTQMDZ"},
+    {"order": 22, "name": "BEEFAMILY 2",   "meta_id": "1506205527775161", "google_id": null,           "channel_id": "C0B0AAV9M33", "note": "Account Meta interno Bee Family, aggiunto 26/04/2026"}
+  ]
 }

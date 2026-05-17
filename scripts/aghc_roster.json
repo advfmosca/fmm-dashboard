@@ -1,5 +1,47 @@
 {
-  "_comment": "Placeholder. Da popolare in Fase 2 (Refactor AGHC) copiando da /Users/francescomariamosca/Desktop/Bee Family/AGHC Check 3-Giorni/_skill/roster.json. Includere mapping account Meta condivisi (3 casi) + 5 TikTok attivi + slack_channels per ognuno dei 18 clienti AGHC.",
-  "version": "TBD",
-  "clienti": []
+  "_comment": "Roster AGHC consolidato — 18 clienti + 15 Meta unici (3 condivisi) + 5 TikTok attivi + channel_id Slack. Fonte di verità unica per three-day-check-aghc v3. Allineato al 2026-05-17 con /Users/francescomariamosca/Desktop/Bee Family/AGHC Check 3-Giorni/_skill/{roster.json,slack_channels.json}.",
+  "version": "2026-05-17",
+  "workspace": "fmm-consulting",
+  "anomalie_channel_id": "C0AV66JL4LD",
+  "anomalie_channel_name": "#aghc-anomalie",
+  "dm_francesco_channel_id": "U0B0P0N7A2U",
+  "policy": {
+    "reminder_interval_days": 3,
+    "history_lookback_days": 60
+  },
+  "shared_meta_accounts": {
+    "1312718426033158": {
+      "account_name": "ADS - Adèsso Hotel",
+      "shared_by": ["ACCENTODI", "ADESSO"]
+    },
+    "1528485957725509": {
+      "account_name": "ADS // Hannah Hotels Collection",
+      "shared_by": ["HANNAH", "HANNAH TERRACES"]
+    },
+    "821188209852436": {
+      "account_name": "ADS // HOTEL MARCELLA ROYAL",
+      "shared_by": ["MARCELLA ROYAL", "TERRAZZA FLAVIA"]
+    }
+  },
+  "clients": [
+    {"order": 1,  "name": "ACCENTODI",       "slug": "accentodi",       "meta_id": "1312718426033158",  "meta_shared": true,  "tiktok_id": null,                  "channel_id": "C0B08FNBTC1"},
+    {"order": 2,  "name": "ADESSO",          "slug": "adesso",          "meta_id": "1312718426033158",  "meta_shared": true,  "tiktok_id": null,                  "channel_id": "C0AUU4Z00ET"},
+    {"order": 3,  "name": "ALTAFIUMARA",     "slug": "altafiumara",     "meta_id": "1201395876543423",  "meta_shared": false, "tiktok_id": null,                  "channel_id": "C0AUU4Z3AJK"},
+    {"order": 4,  "name": "CASTELLO",        "slug": "castello",        "meta_id": "1489903155429629",  "meta_shared": false, "tiktok_id": null,                  "channel_id": "C0B0PSKQG7J"},
+    {"order": 5,  "name": "DELLA PIANA",     "slug": "della-piana",     "meta_id": "911357333863123",   "meta_shared": false, "tiktok_id": "7504967007843319824", "channel_id": "C0AVD6LGLAG"},
+    {"order": 6,  "name": "HANNAH",          "slug": "hannah",          "meta_id": "1528485957725509",  "meta_shared": true,  "tiktok_id": null,                  "channel_id": "C0AVD6M2ZL4"},
+    {"order": 7,  "name": "HANNAH TERRACES", "slug": "hannah-terraces", "meta_id": "1528485957725509",  "meta_shared": true,  "tiktok_id": null,                  "channel_id": "C0AUU50FNFR"},
+    {"order": 8,  "name": "HEMANAIRE",       "slug": "hemanaire",       "meta_id": "217115315497718",   "meta_shared": false, "tiktok_id": null,                  "channel_id": "C0AV9JLDU2W"},
+    {"order": 9,  "name": "LIVATA",          "slug": "livata",          "meta_id": "4666471140299701",  "meta_shared": false, "tiktok_id": null,                  "channel_id": "C0B0PSM53JL"},
+    {"order": 10, "name": "LUNETTA",         "slug": "lunetta",         "meta_id": "687349689221880",   "meta_shared": false, "tiktok_id": "7498330316248203280", "channel_id": "C0AV66MSM4M"},
+    {"order": 11, "name": "MAGARI ESTATES",  "slug": "magari-estates",  "meta_id": "1372615496521110",  "meta_shared": false, "tiktok_id": null,                  "channel_id": "C0AV37J59J7"},
+    {"order": 12, "name": "MARCELLA ROYAL",  "slug": "marcella-royal",  "meta_id": "821188209852436",   "meta_shared": true,  "tiktok_id": "7499093699838607377", "channel_id": "C0AV66N2WER"},
+    {"order": 13, "name": "MARE",            "slug": "mare",            "meta_id": "1432341844596179",  "meta_shared": false, "tiktok_id": "7498679494010667009", "channel_id": "C0B0PSP1B7A"},
+    {"order": 14, "name": "MONTEMAGNO",      "slug": "montemagno",      "meta_id": "752450855779035",   "meta_shared": false, "tiktok_id": null,                  "channel_id": "C0B0Q5HJUMN"},
+    {"order": 15, "name": "TERRAZZA FLAVIA", "slug": "terrazza-flavia", "meta_id": "821188209852436",   "meta_shared": true,  "tiktok_id": null,                  "channel_id": "C0B08FT108Z"},
+    {"order": 16, "name": "VILLA ERMELLINA", "slug": "villa-ermellina", "meta_id": "30233607946222961", "meta_shared": false, "tiktok_id": "7612666695502118929", "channel_id": "C0AV37JNCTV"},
+    {"order": 17, "name": "VILLA GIADA",     "slug": "villa-giada",     "meta_id": "1849759899186169",  "meta_shared": false, "tiktok_id": null,                  "channel_id": "C0AV7GW30SJ"},
+    {"order": 18, "name": "VILLA MILIANI",   "slug": "villa-miliani",   "meta_id": "1353024533007038",  "meta_shared": false, "tiktok_id": null,                  "channel_id": "C0AV37K0Y9Z"}
+  ],
+  "tiktok_not_active": ["HEMANAIRE", "MAGARI ESTATES", "VILLA GIADA"]
 }
