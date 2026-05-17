@@ -1,0 +1,181 @@
+{
+  "_comment": "Roster auto-popolato dal task scheduled fmm-discover-other-accounts (cron 0 6 * * *). Contiene gli account Meta visibili che NON sono in beefamily_roster.json, aghc_roster.json. Aggiornato 1 volta al giorno.",
+  "last_updated": "2026-05-17T12:40:35+00:00",
+  "accounts": [
+    {
+      "account_id": "545678112146706",
+      "name": "545678112146706",
+      "business_id": "2103552949917496",
+      "business_name": "Lia Nunziante",
+      "is_queryable": true
+    },
+    {
+      "account_id": "644183771741229",
+      "name": "ADS // BB",
+      "business_id": "710718359673728",
+      "business_name": "Senape - Digital Agency",
+      "is_queryable": true
+    },
+    {
+      "account_id": "104551173421989",
+      "name": "ADV CENTRO BENESSERE COCCOLE",
+      "business_id": "1867781486610482",
+      "business_name": "Azienda di Liala Savoldelli",
+      "is_queryable": true
+    },
+    {
+      "account_id": "1971082450368617",
+      "name": "B&M Srl Marketing nel Benessere (Read-Only)",
+      "business_id": "201298286891243",
+      "business_name": "B&M Srl",
+      "is_queryable": true
+    },
+    {
+      "account_id": "1514281636217556",
+      "name": "Bike Armor AD News",
+      "business_id": "9808624449191064",
+      "business_name": "Bike Armor New",
+      "is_queryable": true
+    },
+    {
+      "account_id": "1068437186839148",
+      "name": "Biolife Feb 2023 #1",
+      "business_id": "1937500849888822",
+      "business_name": "Its Mask Academy DEF",
+      "is_queryable": false
+    },
+    {
+      "account_id": "410229420136382",
+      "name": "Biolife Svizzera - Maggio 2024",
+      "business_id": "1937500849888822",
+      "business_name": "Its Mask Academy DEF",
+      "is_queryable": false
+    },
+    {
+      "account_id": "905312555090174",
+      "name": "Dejavù Napoli",
+      "business_id": "515245629665399",
+      "business_name": "Dejavù Napoli",
+      "is_queryable": true
+    },
+    {
+      "account_id": "137429906",
+      "name": "Estetica Tiziana",
+      "business_id": "1860264124035712",
+      "business_name": "Estetica Tiziana",
+      "is_queryable": true
+    },
+    {
+      "account_id": "1131881372370984",
+      "name": "Fabrizio",
+      "business_id": "943647054042212",
+      "business_name": "ParafarmaciaAnagnina",
+      "is_queryable": true
+    },
+    {
+      "account_id": "422761780480167",
+      "name": "Giulia & Daniele Tango",
+      "business_id": "899938874883713",
+      "business_name": "TangoVivo",
+      "is_queryable": true
+    },
+    {
+      "account_id": "1125795381085726",
+      "name": "Gusto Sorrento",
+      "business_id": "107997384094249",
+      "business_name": "Gusto Sorrento",
+      "is_queryable": true
+    },
+    {
+      "account_id": "1133953543286736",
+      "name": "Hotel King Marte",
+      "business_id": "1133952749953482",
+      "business_name": "Color Holiday",
+      "is_queryable": true
+    },
+    {
+      "account_id": "891309852123388",
+      "name": "Igor5",
+      "business_id": "575661396168315",
+      "business_name": "Clarte 7702",
+      "is_queryable": true
+    },
+    {
+      "account_id": "1126527627971707",
+      "name": "itsmaskacademy.it",
+      "business_id": "5569349543127103",
+      "business_name": "itsmaskacademy.it",
+      "is_queryable": true
+    },
+    {
+      "account_id": "608748817067802",
+      "name": "LEADER DIGITALE",
+      "business_id": "144484743374543",
+      "business_name": "Partner Leader Digitale",
+      "is_queryable": true
+    },
+    {
+      "account_id": "24101896046170271",
+      "name": "Med e Tech (Read-Only)",
+      "business_id": "201298286891243",
+      "business_name": "B&M Srl",
+      "is_queryable": true
+    },
+    {
+      "account_id": "44052081",
+      "name": "Misano: Hoy Hotels (gruppo)",
+      "business_id": "165405987989394",
+      "business_name": "HoY Hotels Misano",
+      "is_queryable": false
+    },
+    {
+      "account_id": "1547481008600652",
+      "name": "Mokambo Shore Hotel",
+      "business_id": "1133952749953482",
+      "business_name": "Color Holiday",
+      "is_queryable": true
+    },
+    {
+      "account_id": "354466545611537",
+      "name": "NON USARE",
+      "business_id": "1937500849888822",
+      "business_name": "Its Mask Academy DEF",
+      "is_queryable": false
+    },
+    {
+      "account_id": "2238834339726186",
+      "name": "Salvatore Esposito",
+      "business_id": "120327009105147",
+      "business_name": "Travel World",
+      "is_queryable": false
+    },
+    {
+      "account_id": "256796067397229",
+      "name": "Scintille di futuro",
+      "business_id": "397621000686733",
+      "business_name": "PG Staff",
+      "is_queryable": true
+    },
+    {
+      "account_id": "216964507486284",
+      "name": "Svizzera",
+      "business_id": "147640583273191",
+      "business_name": "Svizzera",
+      "is_queryable": false
+    },
+    {
+      "account_id": "1114253640770918",
+      "name": "The Inn at the Roman Forum",
+      "business_id": "2967386070130867",
+      "business_name": "The Inn at the Roman Forum",
+      "is_queryable": true
+    },
+    {
+      "account_id": "98484749",
+      "name": "Turnover",
+      "business_id": "",
+      "business_name": "",
+      "is_queryable": false
+    }
+  ]
+}
