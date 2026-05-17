@@ -253,6 +253,34 @@ main {
 .alert-card.critical { border-left: 3px solid var(--red); }
 .alert-card.warning  { border-left: 3px solid var(--yellow); }
 .alert-card.info     { border-left: 3px solid var(--blue); }
+.alert-card[data-owner]:not([data-owner=""]) { border-left-color: var(--owner-color); }
+
+.alert-card .breadcrumb {
+  font-size: 11px;
+  letter-spacing: 0.4px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.alert-card .breadcrumb .owner-label { font-weight: 700; }
+.alert-card .breadcrumb .bc-sep { color: var(--fg-dim); }
+
+.badge.owner {
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.platform-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+}
+.platform-logo svg { width: 100%; height: 100%; display: block; }
 
 .alert-card .row {
   display: flex;

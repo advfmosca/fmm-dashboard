@@ -2,11 +2,16 @@
 // Carica i manifest delle 3 sezioni, popola KPI + cards + sparkline.
 // Deep-link via ?section=X&date=Y&client=Z. Filtri persistenti in localStorage.
 
-const SECTIONS = ["spending", "beefamily", "aghc"];
+const SECTIONS = ["spending", "beefamily", "aghc", "medtech", "other"];
 const STATE = {
   spending:  { manifest: null, current: null, filterChip: "all", filterQuery: "" },
   beefamily: { manifest: null, current: null, filterChip: "all", filterQuery: "" },
   aghc:      { manifest: null, current: null, filterChip: "all", filterQuery: "" },
+  medtech:   { manifest: null, current: null, filterChip: "all", filterQuery: "" },
+  other:     { manifest: null, current: null, filterChip: "all", filterQuery: "" },
+  // Cache globale: ownership map e owners metadata
+  _owners: null,
+  _accountOwner: null,   // Map: account_id (string) → {owner_id, label, color, subclient}
 };
 
 // ────────────────────────────────────────────────────────────────────────
@@ -35,6 +40,83 @@ function daysAgo(iso) {
   const today = new Date();
   const then = new Date(iso);
   return Math.floor((today - then) / 86400000);
+}
+
+// ────────────────────────────────────────────────────────────────────────
+// Loghi piattaforma (SVG inline brand colors)
+// ────────────────────────────────────────────────────────────────────────
+
+const PLATFORM_LOGOS = {
+  meta: `<svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-label="Meta"><circle cx="18" cy="18" r="18" fill="#0866FF"/><path d="M22.5 22h-3v-7h2.5l.5-3h-3v-2.1c0-.8.3-1.5 1.4-1.5h1.6V6H19c-2.4 0-4 1.5-4 4v2h-2.5v3H15v7h3.5z" fill="#fff"/></svg>`,
+  google: `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-label="Google Ads"><path fill="#4285F4" d="M43.6 22.5H42V22H24v8h11.3c-1.6 4.6-6 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 8.3 29.3 6 24 6 14.1 6 6 14.1 6 24s8.1 18 18 18c10.5 0 17.4-7.4 17.4-17.8 0-1.2-.1-2.4-.4-3.7z"/><path fill="#34A853" d="M8.3 14.7l6.6 4.8c1.8-4.3 6-7.3 10.9-7.3 3 0 5.8 1.1 7.9 3L39.4 9.5C34 4.5 27 1.6 19.7 3 14.4 4 9.9 7 8.3 14.7z"/><path fill="#FBBC05" d="M24 42c5.2 0 10-1.8 13.6-4.9l-6.3-5.3c-1.9 1.3-4.4 2.2-7.3 2.2-5.3 0-9.7-3.4-11.3-8L5.9 31C8.6 37.6 15.7 42 24 42z"/><path fill="#EA4335" d="M43.6 22.5H42V22H24v8h11.3c-.8 2.2-2.2 4.1-4 5.5l6.3 5.3c-.4.4 6.7-4.9 6.7-15.1 0-1.2-.1-2.4-.7-3.2z"/></svg>`,
+  tiktok: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="TikTok"><path d="M21 8.5a6.4 6.4 0 0 1-4.1-1.5v8.3a6.4 6.4 0 1 1-6.4-6.4l.7.1v3.6a2.86 2.86 0 1 0 2 2.7V2h3.5a4.84 4.84 0 0 0 4.3 4.3z" fill="#25F4EE" transform="translate(-1,-1)"/><path d="M21 8.5a6.4 6.4 0 0 1-4.1-1.5v8.3a6.4 6.4 0 1 1-6.4-6.4l.7.1v3.6a2.86 2.86 0 1 0 2 2.7V2h3.5a4.84 4.84 0 0 0 4.3 4.3z" fill="#FE2C55" transform="translate(1,1)"/><path d="M21 8.5a6.4 6.4 0 0 1-4.1-1.5v8.3a6.4 6.4 0 1 1-6.4-6.4l.7.1v3.6a2.86 2.86 0 1 0 2 2.7V2h3.5a4.84 4.84 0 0 0 4.3 4.3z" fill="#000"/></svg>`,
+};
+
+function platformLogo(platform) {
+  const k = (platform || "").toLowerCase();
+  let svg = PLATFORM_LOGOS.meta;
+  let label = "Meta";
+  if (k === "google" || k === "google_ads") { svg = PLATFORM_LOGOS.google; label = "Google"; }
+  else if (k === "tiktok") { svg = PLATFORM_LOGOS.tiktok; label = "TikTok"; }
+  return `<span class="platform-logo" title="${label}">${svg}</span>`;
+}
+
+// ────────────────────────────────────────────────────────────────────────
+// Ownership map (MIO CLIENTE > Sub-cliente)
+// ────────────────────────────────────────────────────────────────────────
+
+async function loadOwnersMap() {
+  if (STATE._accountOwner) return STATE._accountOwner;
+  try {
+    const [owners, bf, aghc, other] = await Promise.all([
+      fetchJson("../scripts/owners.json").catch(()=>null),
+      fetchJson("../scripts/beefamily_roster.json").catch(()=>null),
+      fetchJson("../scripts/aghc_roster.json").catch(()=>null),
+      fetchJson("../scripts/other_roster.json").catch(()=>null),
+    ]);
+    STATE._owners = owners || {owners: {}, sub_clients: {}};
+    const map = new Map();
+    if (bf && bf.clients) {
+      const o = STATE._owners.owners.beefamily;
+      for (const c of bf.clients) {
+        if (c.meta_id)   map.set(String(c.meta_id),   { owner: "beefamily", label: o.label, color: o.color, subclient: c.name });
+        if (c.google_id) map.set(String(c.google_id), { owner: "beefamily", label: o.label, color: o.color, subclient: c.name });
+      }
+    }
+    if (aghc && aghc.clients) {
+      const o = STATE._owners.owners.aghc;
+      for (const c of aghc.clients) {
+        if (c.meta_id)   map.set(String(c.meta_id),   { owner: "aghc", label: o.label, color: o.color, subclient: c.name });
+        if (c.tiktok_id) map.set(String(c.tiktok_id), { owner: "aghc", label: o.label, color: o.color, subclient: c.name });
+      }
+    }
+    // CEA — solo Med & Tech
+    const cea = STATE._owners.owners.cea;
+    const medtech = STATE._owners.sub_clients && STATE._owners.sub_clients.medtech;
+    if (cea && medtech && medtech.meta_id) {
+      map.set(String(medtech.meta_id), { owner: "cea", label: cea.label, color: cea.color, subclient: medtech.label });
+    }
+    // Altri — auto-discovered
+    if (other && other.accounts) {
+      const o = STATE._owners.owners.other;
+      for (const a of other.accounts) {
+        if (a.account_id && !map.has(String(a.account_id))) {
+          map.set(String(a.account_id), { owner: "other", label: o.label, color: o.color, subclient: a.name || "—" });
+        }
+      }
+    }
+    STATE._accountOwner = map;
+    return map;
+  } catch (e) {
+    console.error("loadOwnersMap error:", e);
+    STATE._accountOwner = new Map();
+    return STATE._accountOwner;
+  }
+}
+
+function accountOwner(accountId) {
+  if (!STATE._accountOwner) return null;
+  return STATE._accountOwner.get(String(accountId)) || null;
 }
 
 // Costruisce l'URL deep-link alla piattaforma pubblicitaria nativa.
@@ -290,6 +372,32 @@ function kpi(label, value, sub = "", valueCls = "") {
 // ────────────────────────────────────────────────────────────────────────
 
 function getCardsForSection(section, snap) {
+  // ── Sezioni speciali: medtech e other non leggono dagli snapshot fermi ──
+  if (section === "medtech") {
+    const sc = (STATE._owners && STATE._owners.sub_clients && STATE._owners.sub_clients.medtech) || {};
+    return [{
+      kind: "info",
+      account_id: sc.meta_id || "—",
+      name: "Med & Tech (CEA)",
+      platform: "meta",
+      report_url: sc.report_url,
+      severity: "info",
+      isMedtech: true,
+    }];
+  }
+  if (section === "other") {
+    const roster = STATE._otherRoster;
+    if (!roster || !Array.isArray(roster.accounts)) return [];
+    return roster.accounts.map(a => ({
+      kind: "info",
+      account_id: a.account_id,
+      name: a.name || "—",
+      platform: "meta",
+      currency: a.currency,
+      severity: "info",
+      isOther: true,
+    }));
+  }
   if (!snap) return [];
   if (section === "spending") {
     const trend = snap.trend_30d || {};
@@ -344,8 +452,59 @@ function getCardsForSection(section, snap) {
 }
 
 function renderCard(section, c) {
+  // ── Card speciale: Med & Tech (CEA, 1 brand + link a report storico esterno) ──
+  if (c.isMedtech) {
+    const owner = accountOwner(c.account_id) || { owner: "cea", label: "CEA", color: "#38d39f", subclient: "Med & Tech" };
+    const adUrl = adAccountUrl("meta", c.account_id);
+    return `
+      <article class="alert-card info" data-account-id="${c.account_id}" data-owner="cea" style="--owner-color:${owner.color}">
+        <div class="breadcrumb"><span class="owner-label" style="color:${owner.color}">${owner.label}</span> <span class="bc-sep">›</span> <span class="muted">${owner.subclient}</span></div>
+        <div class="row">
+          <div class="title">Total Lift + Total Sculpt</div>
+          <div class="badges">
+            <span class="badge owner" style="background:${owner.color};color:#000;border-color:${owner.color}">${owner.label}</span>
+            ${platformLogo("meta")}
+            <span class="badge fermo_storico">Lead Ads</span>
+          </div>
+        </div>
+        <div class="meta-text">Account Meta: <code>${c.account_id}</code> · Daily check ore 14:58</div>
+        <div class="spend-line" style="gap:8px;flex-wrap:wrap">
+          ${c.report_url ? `<a class="open-ad-btn" href="${c.report_url}" target="_blank" rel="noopener">↗ Report storico Med &amp; Tech</a>` : ""}
+          ${adUrl ? `<a class="open-ad-btn" href="${adUrl}" target="_blank" rel="noopener" style="background:transparent;color:${owner.color};border:1px solid ${owner.color}">↗ Apri su Meta</a>` : ""}
+        </div>
+      </article>
+    `;
+  }
+
+  // ── Card speciale: Altri (auto-discovered, info minimal) ──
+  if (c.isOther) {
+    const owner = accountOwner(c.account_id) || { owner: "other", label: "ALTRI", color: "#9b9ba3", subclient: c.name };
+    const adUrl = adAccountUrl("meta", c.account_id);
+    return `
+      <article class="alert-card info" data-account-id="${c.account_id}" data-owner="other" style="--owner-color:${owner.color}">
+        <div class="breadcrumb"><span class="owner-label" style="color:${owner.color}">${owner.label}</span> <span class="bc-sep">›</span> <span class="muted">${c.name || "—"}</span></div>
+        <div class="row">
+          <div class="title">${c.name || "—"}</div>
+          <div class="badges">
+            <span class="badge owner" style="background:${owner.color};color:#000;border-color:${owner.color}">${owner.label}</span>
+            ${platformLogo("meta")}
+          </div>
+        </div>
+        <div class="meta-text">Account: <code>${c.account_id}</code>${c.currency ? ` · ${c.currency}` : ""}</div>
+        ${adUrl ? `<div class="spend-line"><a class="open-ad-btn" href="${adUrl}" target="_blank" rel="noopener">↗ Apri su Meta Ads Manager</a></div>` : ""}
+      </article>
+    `;
+  }
+
+  // Owner lookup (MIO CLIENTE > Sub-cliente)
+  const owner = accountOwner(c.account_id);
+  const breadcrumb = owner
+    ? `<div class="breadcrumb"><span class="owner-label" style="color:${owner.color}">${owner.label}</span> <span class="bc-sep">›</span> <span class="muted">${owner.subclient || c.name || "—"}</span></div>`
+    : "";
+
   let badges = [];
-  if (c.platform) badges.push(`<span class="badge ${c.platform.toLowerCase()}">${c.platform}</span>`);
+  if (owner) badges.push(`<span class="badge owner" style="background:${owner.color};color:#000;border-color:${owner.color}">${owner.label}</span>`);
+  if (c.platform) badges.push(platformLogo(c.platform));
   if (c.kind === "zero") badges.push(`<span class="badge zero">ZERO</span>`);
   if (c.kind === "spike") badges.push(`<span class="badge spike">SPIKE</span>`);
   if (c.kind === "fermo_nuovo") badges.push(`<span class="badge zero">NUOVO</span>`);
@@ -394,7 +553,8 @@ function renderCard(section, c) {
   const sparkSvg = sparkPoints.length >= 2 ? sparklineSvg(sparkPoints, sparkW, sparkH) : "";
 
   return `
-    <article class="alert-card ${sev}" data-account-id="${c.account_id}" data-platform="${(c.platform || "").toLowerCase()}" data-kind="${c.kind}" data-cause="${c.cause || ""}" data-shared="${c.shared ? '1' : '0'}">
+    <article class="alert-card ${sev}" data-account-id="${c.account_id}" data-platform="${(c.platform || "").toLowerCase()}" data-kind="${c.kind}" data-cause="${c.cause || ""}" data-shared="${c.shared ? '1' : '0'}" data-owner="${owner ? owner.owner : ''}" ${owner ? `style="--owner-color:${owner.color}"` : ''}>
+      ${breadcrumb}
       <div class="row">
         <div class="title">${title}</div>
         <div class="badges">${badges.join("")}</div>
@@ -541,6 +701,38 @@ function renderDatePicker(section) {
 
 async function loadSection(section, targetDate = null) {
   try {
+    // ── Sezioni speciali senza snapshot temporali ──
+    if (section === "medtech") {
+      const status = document.getElementById("status-medtech");
+      const dot = status.querySelector(".dot");
+      const sub = status.querySelector(".status-sub");
+      dot.className = "dot green";
+      sub.textContent = "Daily check Total Lift / Total Sculpt — gira tutti i giorni alle 14:58";
+      document.getElementById("kpi-medtech").innerHTML = "";
+      renderAlerts(section);
+      return;
+    }
+    if (section === "other") {
+      // Carica roster Altri se non già in cache
+      if (!STATE._otherRoster) {
+        STATE._otherRoster = await fetchJson("../scripts/other_roster.json").catch(() => ({accounts: []}));
+      }
+      const accs = (STATE._otherRoster.accounts || []);
+      const status = document.getElementById("status-other");
+      const dot = status.querySelector(".dot");
+      const sub = status.querySelector(".status-sub");
+      if (accs.length === 0) {
+        dot.className = "dot yellow";
+        sub.textContent = "Roster non ancora popolato — il task fmm-discover-other-accounts gira ogni notte alle 06:00";
+      } else {
+        dot.className = "dot green";
+        sub.textContent = `${accs.length} account Meta auto-discovered · ultimo update ${STATE._otherRoster.last_updated || "—"}`;
+      }
+      document.getElementById("kpi-other").innerHTML = "";
+      renderAlerts(section);
+      return;
+    }
+    // ── Sezioni standard (spending / beefamily / aghc) ──
     if (!STATE[section].manifest) {
       STATE[section].manifest = await loadManifest(section);
     }
@@ -563,8 +755,8 @@ async function loadSection(section, targetDate = null) {
     renderDatePicker(section);
   } catch (err) {
     console.error(`Errore caricamento ${section}:`, err);
-    renderStatus(section, null);
-    document.getElementById(`alerts-${section}`).innerHTML =
+    const alertsEl = document.getElementById(`alerts-${section}`);
+    if (alertsEl) alertsEl.innerHTML =
       `<div class="empty-state">Errore di caricamento (${err.message}). La sezione sarà popolata dopo il primo run del task scheduled.</div>`;
   }
 }
@@ -673,6 +865,9 @@ async function loadAll() {
 (async function init() {
   wireEvents();
   restoreFilters();
+
+  // Carica ownership map PRIMA del primo render delle card
+  await loadOwnersMap();
 
   const url = parseUrl();
   activateTab(url.section);

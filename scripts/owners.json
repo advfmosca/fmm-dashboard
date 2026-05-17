@@ -1,0 +1,13 @@
+{
+  "_comment": "Schema gerarchico FMM → cliente diretto → sub-cliente. Usato dalla dashboard per breadcrumb + badge colorato + filtri ownership. Owner colors usati anche per il bordo lato sinistro delle card.",
+  "version": "2026-05-17",
+  "owners": {
+    "beefamily": {"label": "BEE FAMILY", "color": "#ff6b35", "section": "beefamily"},
+    "aghc":      {"label": "AGHC",       "color": "#4c8bf5", "section": "aghc"},
+    "cea":       {"label": "CEA",        "color": "#38d39f", "section": "medtech"},
+    "other":     {"label": "ALTRI",      "color": "#9b9ba3", "section": "other"}
+  },
+  "sub_clients": {
+    "medtech": {"owner": "cea", "label": "Med & Tech", "meta_id": "533672775128363", "report_url": "https://advfmosca.github.io/med-tech-daily-check/"}
+  }
+}

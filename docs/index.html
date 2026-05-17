@@ -18,6 +18,8 @@
       <a href="#spending" data-section="spending" class="tab active" role="tab">Spending</a>
       <a href="#beefamily" data-section="beefamily" class="tab" role="tab">Bee Family</a>
       <a href="#aghc" data-section="aghc" class="tab" role="tab">AGHC</a>
+      <a href="#medtech" data-section="medtech" class="tab" role="tab">Med &amp; Tech</a>
+      <a href="#other" data-section="other" class="tab" role="tab">Altri</a>
     </nav>
     <div class="topbar-actions">
       <button class="btn-icon" id="btn-reload" title="Ricarica" aria-label="Ricarica">
@@ -123,6 +125,41 @@
         </div>
       </div>
       <div class="alert-grid" id="alerts-aghc"></div>
+    </section>
+
+    <!-- ─────────── MED & TECH (CEA) ─────────── -->
+    <section id="section-medtech" class="section">
+      <div class="section-header">
+        <div class="status-card" id="status-medtech">
+          <div class="status-dot"><span class="dot"></span></div>
+          <div class="status-text">
+            <div class="status-title">Med &amp; Tech <span class="muted" style="font-size:13px;font-weight:400">— CEA</span></div>
+            <div class="status-sub muted">In caricamento…</div>
+          </div>
+        </div>
+      </div>
+      <div class="kpi-grid" id="kpi-medtech"></div>
+      <h3 class="block-title">Account &amp; report</h3>
+      <div class="alert-grid" id="alerts-medtech"></div>
+    </section>
+
+    <!-- ─────────── ALTRI CLIENTI ─────────── -->
+    <section id="section-other" class="section">
+      <div class="section-header">
+        <div class="status-card" id="status-other">
+          <div class="status-dot"><span class="dot"></span></div>
+          <div class="status-text">
+            <div class="status-title">Altri Clienti</div>
+            <div class="status-sub muted">Account Meta auto-discovered che non rientrano in BF/AGHC/CEA</div>
+          </div>
+        </div>
+      </div>
+      <div class="kpi-grid" id="kpi-other"></div>
+      <h3 class="block-title">Account Meta connessi</h3>
+      <div class="alert-toolbar">
+        <input type="search" class="filter-input" data-section="other" placeholder="Cerca account…" />
+      </div>
+      <div class="alert-grid" id="alerts-other"></div>
     </section>
   </main>
 
