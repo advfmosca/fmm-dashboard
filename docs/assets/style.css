@@ -338,6 +338,7 @@ main {
   padding: 20px;
   backdrop-filter: blur(4px);
 }
+.modal-overlay[hidden] { display: none; }
 .modal {
   background: var(--bg-elev);
   border: 1px solid var(--border);
